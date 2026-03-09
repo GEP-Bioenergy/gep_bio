@@ -42,9 +42,6 @@ def npv_residue(sub_data):
 # Determine NPV of Delivered Fuel cost (Ft)
 def npv_fuel_cost_rerun(sub_data):
     sub_data['NpvFt'] = (sub_data['MinimumOverallLCOE2030']*sub_data['NpvGen'])-sub_data['NpvIt']-sub_data['NpvOM']
-    
-    # Calculating the Delivered Fuel cost ($) annually using the discount factor
-    # sub_data['Ft'] = sub_data['NpvFt']/DISCOUNT_FACTOR
 
     # Determining the delivered Fuel cost per Tonne ($/ton)
     sub_data['Ft_PerTonRes_rr'] = sub_data['NpvFt']/sub_data['NpvRes']

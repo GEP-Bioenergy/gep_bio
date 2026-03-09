@@ -128,10 +128,6 @@ def crop_land_calc(sub_data, top_crop, crop_data):
     # Estimate cropping area based on cultivation percentage of TopCrop
     sub_data['CultivationArea']=sub_data['CropLandArea']/(sub_data['PercentageArea']) #ha
     
-    #sub_data['CollectionDistR']=np.sqrt(sub_data['CropLandArea']/(np.pi*100)) #km
-    
-    #sub_data['CollectionDistR-M']=sub_data['CollectionDistR']*1000 #meters 
-    
     return sub_data
 
 
