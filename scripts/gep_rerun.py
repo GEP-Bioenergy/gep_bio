@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 pd.options.mode.chained_assignment = None
 
 #CONSTANTS
-RESULTS_FOLDER = 'results-rerun'
+RESULTS_FOLDER = 'results'
 
 # MODELLING PARAMETERS
 SYSTEM_EFFICIENCY = 0.3 #System efficiency 30%
@@ -41,18 +41,18 @@ def npv_residue(sub_data):
 
 # Determine NPV of Delivered Fuel cost (Ft)
 def npv_fuel_cost_rerun(sub_data):
-    sub_data['NpvFt'] = (sub_data['MinimumOverallLCOE2030']*sub_data['NpvGen'])-sub_data['NpvIt']-sub_data['NpvOM']
+    sub_data['NpvFt'] = (sub_data['MinimumOverallGenLCOE2030']*sub_data['NpvGen'])-sub_data['NpvIt']-sub_data['NpvOM']
 
     # Determining the delivered Fuel cost per Tonne ($/ton)
-    sub_data['Ft_PerTonRes_rr'] = sub_data['NpvFt']/sub_data['NpvRes']
+    sub_data['Ft_PerTonRes'] = sub_data['NpvFt']/sub_data['NpvRes']
 
     return sub_data
 
 # Cumulative distribution of delivered fuel costs
 def fuel_CDF_rerun(sub_data, scenario, fuelCDF):
-    DeliveredFuelCost = sub_data['Ft_PerTonRes_rr']
+    DeliveredFuelCost = sub_data['Ft_PerTonRes']
     
-    sorted_df = sub_data.sort_values('Ft_PerTonRes_rr')
+    sorted_df = sub_data.sort_values('Ft_PerTonRes')
     
     # Calculate the cumulative proportion of the data that falls below each value
     if len(DeliveredFuelCost) > 0:
@@ -86,7 +86,7 @@ def fuel_CDF_rerun(sub_data, scenario, fuelCDF):
 
 # Post processing
 def data_postprocessing_rerun(sub_data, scenario, fuelCDF):
-    outputName = f'{scenario}-results-rr.csv'
+    outputName = f'{scenario}-results.csv'
 
     OUTPUT_DIR = os.getcwd() + f"/{RESULTS_FOLDER}"
     
@@ -97,6 +97,6 @@ def data_postprocessing_rerun(sub_data, scenario, fuelCDF):
 
     sub_data.to_csv(filename, index=False)
     
-    fuelCDF.to_csv('CDF_rr.csv', index=False)
+    fuelCDF.to_csv('CDF.csv', index=False)
 
     return

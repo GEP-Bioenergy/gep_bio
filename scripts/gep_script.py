@@ -22,10 +22,22 @@ DISCOUNT_RATE = 0.07 #Discount rate 7%
 DISCOUNT_FACTOR = 11.65358318 
 
 
+# Function assigns Minimum GEN LCOE
+def get_gen_lcoe(i, gen_sys, sub_data):
+    
+    if gen_sys == 'MG_Wind_Hybrid2030':
+        return sub_data.WindHybridGenLCOE2030.loc[i]
+    
+    elif gen_sys == 'MG_PV_Hybrid2030':
+        return sub_data.PVHybridGenLCOE2030.loc[i]
+    
+    elif gen_sys == 'MG_Hydro2030':
+        return sub_data.MG_Hydro2030.loc[i]
+
 
 # Function takes in scenario files and filter out required variables
 def data_setup(scenario_file):
-    fields = ["GridCellArea","Admin1","Tier","X_deg","Y_deg","id","Pop2030","TotalEnergyPerCell","MinimumOverall2030","MinimumOverallLCOE2030", "InvestmentCost2025", "InvestmentCost2030"]
+    fields = ["GridCellArea","Admin1","Tier","X_deg","Y_deg","id","Pop2030","TotalEnergyPerCell","MinimumOverall2030","MinimumOverallLCOE2030", "WindHybridGenLCOE2030", "PVHybridGenLCOE2030", "MG_Hydro2030"]
     
     data_types_conversion_numeric = {
                                     "GridCellArea": np.float16,
@@ -42,6 +54,10 @@ def data_setup(scenario_file):
     
     # Drop non mini-grids
     sub_data = sub_data.drop(sub_data[(sub_data.MinimumOverall2030 == 'Grid2030') | (sub_data.MinimumOverall2030 == 'SA_PV2030')].index)
+    
+    sub_data = sub_data.reset_index().drop(columns = 'index')
+    
+    sub_data["MinimumOverallGenLCOE2030"] = [ get_gen_lcoe(i, gen_sys, sub_data) for i, gen_sys in enumerate(sub_data["MinimumOverall2030"])]
     
     return sub_data
 
@@ -197,7 +213,7 @@ Ft ($)= NPV(Ft)/(∑_(t=1)^n▒1/(1+r)^t)
 '''
 # Determine NPV of Delivered Fuel cost (Ft)
 def npv_fuel_cost(sub_data):
-    sub_data['NpvFt'] = (sub_data['MinimumOverallLCOE2030']*sub_data['NpvGen'])-sub_data['NpvIt']-sub_data['NpvOM']
+    sub_data['NpvFt'] = (sub_data['MinimumOverallGenLCOE2030']*sub_data['NpvGen'])-sub_data['NpvIt']-sub_data['NpvOM']
     
     # Calculating the Delivered Fuel cost ($) annually using the discount factor
     sub_data['Ft'] = sub_data['NpvFt']/DISCOUNT_FACTOR
