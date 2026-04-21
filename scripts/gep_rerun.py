@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 pd.options.mode.chained_assignment = None
 
 #CONSTANTS
-RESULTS_FOLDER = 'results'
+RESULTS_FOLDER = 'results/scenarios'
 
 # MODELLING PARAMETERS
 SYSTEM_EFFICIENCY = 0.3 #System efficiency 30%
@@ -97,6 +97,6 @@ def data_postprocessing_rerun(sub_data, scenario, fuelCDF):
 
     sub_data.to_csv(filename, index=False)
     
-    fuelCDF.to_csv('CDF.csv', index=False)
+    fuelCDF.to_csv(os.getcwd() + '/results/CDF.csv', index=False)
 
     return

@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 pd.options.mode.chained_assignment = None
 
 #CONSTANTS
-RESULTS_FOLDER = 'results'
+RESULTS_FOLDER = 'results/scenarios'
 
 # MODELLING PARAMETERS
 SYSTEM_EFFICIENCY = 0.3 #System efficiency 30%
@@ -37,7 +37,7 @@ def get_gen_lcoe(i, gen_sys, sub_data):
 
 # Function takes in scenario files and filter out required variables
 def data_setup(scenario_file):
-    fields = ["GridCellArea","Admin1","Tier","X_deg","Y_deg","id","Pop2030","TotalEnergyPerCell","MinimumOverall2030","MinimumOverallLCOE2030", "WindHybridGenLCOE2030", "PVHybridGenLCOE2030", "MG_Hydro2030"]
+    fields = ["GridCellArea","Admin1","Tier","X_deg","Y_deg","id","Pop2030","TotalEnergyPerCell","MinimumOverall2030","MinimumOverallLCOE2030", "WindHybridGenLCOE2030", "PVHybridGenLCOE2030", "MG_Hydro2030", "Generation_Capex2030"]
     
     data_types_conversion_numeric = {
                                     "GridCellArea": np.float16,
@@ -55,6 +55,8 @@ def data_setup(scenario_file):
     # Drop non mini-grids
     sub_data = sub_data.drop(sub_data[(sub_data.MinimumOverall2030 == 'Grid2030') | (sub_data.MinimumOverall2030 == 'SA_PV2030')].index)
     
+    sub_data = sub_data.drop(sub_data[(sub_data.MinimumOverall2030 == 'MG_Hydro2030')].index)
+
     sub_data = sub_data.reset_index().drop(columns = 'index')
     
     sub_data["MinimumOverallGenLCOE2030"] = [ get_gen_lcoe(i, gen_sys, sub_data) for i, gen_sys in enumerate(sub_data["MinimumOverall2030"])]
@@ -259,57 +261,3 @@ def fuel_CDF(sub_data, scenario, fuelCDF):
     
     return fuelCDF
 
-
-
-# Post processing
-def data_postprocessing(sub_data, scenario, fuelCDF):
-    outputName = f'{scenario}-results.csv'
-
-    OUTPUT_DIR = os.getcwd() + f"/{RESULTS_FOLDER}"
-    
-    if not os.path.exists(OUTPUT_DIR):
-        os.mkdir(OUTPUT_DIR)
-    
-    filename = os.path.join(OUTPUT_DIR, outputName)
-
-    sub_data.to_csv(filename, index=False)
-    
-    fuelCDF.to_csv('CDF.csv', index=False)
-
-    return
-    
-    
-
-'''
-Generating plots
-'''
-def cdf_plot(sub_data):
-    DeliveredFuelCost = sub_data['Ft_PerTonRes']
-
-    # Calculate the cumulative proportion of the data that falls below each value
-    cumulative = np.linspace(0,100, len(DeliveredFuelCost))
-
-    # Sort the data in ascending order
-    sorted_data = np.sort(DeliveredFuelCost)
-
-    # Calculate the cumulative proportion of the sorted data
-    # cumulative_data = np.cumsum(sorted_data) / np.sum(sorted_data)
-
-    # adding style theme in scatter plot 
-    plt.style.use('seaborn') 
-
-    # Plot the CDF
-    plt.plot(sorted_data, cumulative)
-
-    # Add labels and title
-    plt.xlabel("Delivered cost of residues $/ton ")
-    plt.ylabel("Percentage of clusters")
-    plt.title("Cumulative Distribution Function of Delivered Residue Cost")
-
-    # adding vertical line in data co-ordinates 
-    plt.axvline(0, c='black', ls='--') 
-    
-    # adding horizontal line in data co-ordinates 
-    plt.axhline(0, c='black', ls='--') 
-
-    plt.show()
