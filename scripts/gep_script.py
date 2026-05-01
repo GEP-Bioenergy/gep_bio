@@ -16,8 +16,8 @@ RESIDUE_PRODUCT_RATIO = 1.48 #RPR
 RESIDUE_AVAILABILITY_FACTOR = 0.4 #40% availability
 CROP_YIELD = 2.23 #crop yield in tons/ha
 ANNUAL_HOURS = 8760
-CAPACITY_FACTOR = (4/24) #Capacity factor (CF)% 4hrs electricity supply daily
-INVESTMENT_COST = 2150 # $/kW
+INVESTMENT_COST = 2247 # $/kW
+VARIABLE_OM = 0.002 # Variable operations and maintenance  $/kWh
 DISCOUNT_RATE = 0.07 #Discount rate 7%
 DISCOUNT_FACTOR = 11.65358318 
 
@@ -60,6 +60,8 @@ def data_setup(scenario_file):
     sub_data = sub_data.reset_index().drop(columns = 'index')
     
     sub_data["MinimumOverallGenLCOE2030"] = [ get_gen_lcoe(i, gen_sys, sub_data) for i, gen_sys in enumerate(sub_data["MinimumOverall2030"])]
+    
+    sub_data['MinimumOverallGenLCOE2030_VOM'] = sub_data['MinimumOverallGenLCOE2030'] - VARIABLE_OM
     
     return sub_data
 
@@ -214,50 +216,50 @@ Ft ($)= NPV(Ft)/(∑_(t=1)^n▒1/(1+r)^t)
  where (∑_(t=1)^n▒1/(1+r)^t) is the discount factor
 '''
 # Determine NPV of Delivered Fuel cost (Ft)
-def npv_fuel_cost(sub_data):
-    sub_data['NpvFt'] = (sub_data['MinimumOverallGenLCOE2030']*sub_data['NpvGen'])-sub_data['NpvIt']-sub_data['NpvOM']
+# def npv_fuel_cost(sub_data):
+#     sub_data['NpvFt'] = (sub_data['MinimumOverallGenLCOE2030']*sub_data['NpvGen'])-sub_data['NpvIt']-sub_data['NpvOM']
     
-    # Calculating the Delivered Fuel cost ($) annually using the discount factor
-    sub_data['Ft'] = sub_data['NpvFt']/DISCOUNT_FACTOR
+#     # Calculating the Delivered Fuel cost ($) annually using the discount factor
+#     sub_data['Ft'] = sub_data['NpvFt']/DISCOUNT_FACTOR
 
-    # Determining the delivered Fuel cost per Tonne ($/ton)
-    sub_data['Ft_PerTonRes'] = sub_data['Ft']/sub_data['WeightOfRes']
+#     # Determining the delivered Fuel cost per Tonne ($/ton)
+#     sub_data['Ft_PerTonRes'] = sub_data['Ft']/sub_data['WeightOfRes']
 
-    return sub_data
+#     return sub_data
 
 
 
   
 # Cumulative distribution of delivered fuel costs
-def fuel_CDF(sub_data, scenario, fuelCDF):
-    DeliveredFuelCost = sub_data['Ft_PerTonRes']
+# def fuel_CDF(sub_data, scenario, fuelCDF):
+#     DeliveredFuelCost = sub_data['Ft_PerTonRes']
     
-    sorted_df = sub_data.sort_values('Ft_PerTonRes')
+#     sorted_df = sub_data.sort_values('Ft_PerTonRes')
     
-    # Calculate the cumulative proportion of the data that falls below each value
-    if len(DeliveredFuelCost) > 0:
-        cumulative = np.linspace(0,100, len(DeliveredFuelCost))
-        tier = np.array(sorted_df['Tier'])
-        print("Length of delivered fuel cost", len(DeliveredFuelCost))
-    else:
-        cumulative = []
-        tier = []
-        print("Length of delivered fuel cost",len(DeliveredFuelCost))
+#     # Calculate the cumulative proportion of the data that falls below each value
+#     if len(DeliveredFuelCost) > 0:
+#         cumulative = np.linspace(0,100, len(DeliveredFuelCost))
+#         tier = np.array(sorted_df['Tier'])
+#         print("Length of delivered fuel cost", len(DeliveredFuelCost))
+#     else:
+#         cumulative = []
+#         tier = []
+#         print("Length of delivered fuel cost",len(DeliveredFuelCost))
 
-    # Sort the data in ascending order
+#     # Sort the data in ascending order
     
-    sorted_data = np.sort(DeliveredFuelCost)
-    print(type(sorted_data))
+#     sorted_data = np.sort(DeliveredFuelCost)
+#     print(type(sorted_data))
     
-    # Reassigning index based on length of new dataFrame
-    if len(sorted_data) > len(fuelCDF) and len(fuelCDF) != 0:
+#     # Reassigning index based on length of new dataFrame
+#     if len(sorted_data) > len(fuelCDF) and len(fuelCDF) != 0:
         
-        fuelCDF = fuelCDF.reindex(range(len(sorted_data)))
+#         fuelCDF = fuelCDF.reindex(range(len(sorted_data)))
     
-    newCDF = pd.DataFrame({f'{scenario}': sorted_data, f'{scenario}-cum': cumulative, f'{scenario}-tier': tier})
+#     newCDF = pd.DataFrame({f'{scenario}': sorted_data, f'{scenario}-cum': cumulative, f'{scenario}-tier': tier})
     
-    fuelCDF = pd.concat([newCDF, fuelCDF], axis=1)
+#     fuelCDF = pd.concat([newCDF, fuelCDF], axis=1)
     
     
-    return fuelCDF
+#     return fuelCDF
 

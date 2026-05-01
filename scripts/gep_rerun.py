@@ -16,8 +16,8 @@ RESIDUE_PRODUCT_RATIO = 1.48 #RPR
 RESIDUE_AVAILABILITY_FACTOR = 0.4 #40% availability
 CROP_YIELD = 2.23 #crop yield in tons/ha
 ANNUAL_HOURS = 8760
-CAPACITY_FACTOR = (4/24) #Capacity factor (CF)% 4hrs electricity supply daily
-INVESTMENT_COST = 2150 # $/kW
+INVESTMENT_COST = 2247 # $/kW
+VARIABLE_OM = 0.002 # Variable operations and maintenance  $/kWh
 DISCOUNT_RATE = 0.07 #Discount rate 7%
 DISCOUNT_FACTOR = 11.65358318 
 
@@ -41,7 +41,7 @@ def npv_residue(sub_data):
 
 # Determine NPV of Delivered Fuel cost (Ft)
 def npv_fuel_cost_rerun(sub_data):
-    sub_data['NpvFt'] = (sub_data['MinimumOverallGenLCOE2030']*sub_data['NpvGen'])-sub_data['NpvIt']-sub_data['NpvOM']
+    sub_data['NpvFt'] = (sub_data['MinimumOverallGenLCOE2030_VOM']*sub_data['NpvGen'])-sub_data['NpvIt']-sub_data['NpvOM']
 
     # Determining the delivered Fuel cost per Tonne ($/ton)
     sub_data['Ft_PerTonRes'] = sub_data['NpvFt']/sub_data['NpvRes']
@@ -100,3 +100,57 @@ def data_postprocessing_rerun(sub_data, scenario, fuelCDF):
     fuelCDF.to_csv(os.getcwd() + '/results/CDF.csv', index=False)
 
     return
+
+# Function assigns Minimum GEN LCOE
+def get_gen_lcoe(i, gen_sys, sub_data):
+    
+    if gen_sys == 'MG_Wind_Hybrid2030':
+        return sub_data.WindHybridGenLCOE2030.loc[i]
+    
+    elif gen_sys == 'MG_PV_Hybrid2030':
+        return sub_data.PVHybridGenLCOE2030.loc[i]
+    
+    elif gen_sys == 'MG_Hydro2030':
+        return sub_data.MG_Hydro2030.loc[i]
+
+# Function assigns Minimum GEN LCOE
+def get_diesel_con(i, gen_sys, sub_data):
+    
+    if gen_sys == 'MG_Wind_Hybrid2030':
+        return sub_data.WindHybridDieselConsumption2030.loc[i]
+    
+    elif gen_sys == 'MG_PV_Hybrid2030':
+        return sub_data.PVHybridDieselConsumption2030.loc[i]
+    
+
+def check_setup(scenario_file):
+    fields =["GridCellArea","Admin1","Tier","X_deg","Y_deg","id","Pop2030","TotalEnergyPerCell","MinimumOverall2030","MinimumOverallLCOE2030",              "WindHybridGenLCOE2030", "PVHybridGenLCOE2030", "MG_Hydro2030", "Generation_Capex2030", "Generation_Capex2025",
+             "MGDieselFuelCost2030","WindHybridDieselConsumption2030", "PVHybridDieselConsumption2030"]
+    
+    data_types_conversion_numeric = {
+                                    "GridCellArea": np.float16,
+                                    "X_deg": np.float16,
+                                    "Y_deg": np.float16,
+                                    "Pop2030": np.float16,
+                                    "MinimumOverallLCOE2030": np.float16,
+                                    "Tier": np.int16,
+                                    "Admin1": "category",
+                                    "MinimumOverall2030": "category"
+                                    }
+    
+    sub_data = pd.read_csv(scenario_file, dtype=data_types_conversion_numeric, skipinitialspace=True, usecols=fields)
+    
+    # Drop non mini-grids
+    sub_data = sub_data.drop(sub_data[(sub_data.MinimumOverall2030 == 'Grid2030') | (sub_data.MinimumOverall2030 == 'SA_PV2030')].index)
+    
+    sub_data = sub_data.drop(sub_data[(sub_data.MinimumOverall2030 == 'MG_Hydro2030')].index)
+
+    sub_data = sub_data.reset_index().drop(columns = 'index')
+    
+    sub_data["MinimumOverallGenLCOE2030"] = [ get_gen_lcoe(i, gen_sys, sub_data) for i, gen_sys in enumerate(sub_data["MinimumOverall2030"])]
+    
+    sub_data["MinOverallDieselCon2030"] = [ get_diesel_con(i, gen_sys, sub_data) for i, gen_sys in enumerate(sub_data["MinimumOverall2030"])]
+    
+    sub_data['MinimumOverallGenLCOE2030_VOM'] = sub_data['MinimumOverallGenLCOE2030'] - VARIABLE_OM
+    
+    return sub_data
