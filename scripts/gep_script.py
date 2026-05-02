@@ -37,7 +37,8 @@ def get_gen_lcoe(i, gen_sys, sub_data):
 
 # Function takes in scenario files and filter out required variables
 def data_setup(scenario_file):
-    fields = ["GridCellArea","Admin1","Tier","X_deg","Y_deg","id","Pop2030","TotalEnergyPerCell","MinimumOverall2030","MinimumOverallLCOE2030", "WindHybridGenLCOE2030", "PVHybridGenLCOE2030", "MG_Hydro2030", "Generation_Capex2030"]
+    fields = ["GridCellArea","Admin1","Tier","X_deg","Y_deg","id","Pop2030","TotalEnergyPerCell","MinimumOverall2030","MinimumOverallLCOE2030",
+              "WindHybridGenLCOE2030", "PVHybridGenLCOE2030", "MG_Hydro2030", "Generation_Capex2030", "Generation_Capex2025"]
     
     data_types_conversion_numeric = {
                                     "GridCellArea": np.float16,
