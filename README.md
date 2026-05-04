@@ -18,6 +18,7 @@ Electrification Variables
 | `MinimumOverall2030` | Least cost electrification technology selected | e.g., mini-grid system |
 | `MinimumOverallLCOE2030` | Levelized cost of electrification of the least cost technology | $/kWh |
 | `Generation_CAPEX2030` | Estimated generation capital expenditure (investment cost) of least cost technology in 2030 | $ |
+| `Generation_CAPEX2025` | Estimated generation capital expenditure (investment cost) of least cost technology in 2025 | $ |
 | `X_deg` | Longitude x-coordinates | degrees |
 | `Y_deg` | Latitude y-coordinates | degrees |
 | `id` | Unique identifier per cluster | — |
