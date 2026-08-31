@@ -221,6 +221,6 @@ pyrightconfig.json
 # Data and result files
 ng-3-scenarios-results/
 results/
-
+results2150.zip
 
 # End of https://www.toptal.com/developers/gitignore/api/jupyternotebooks,macos,python
