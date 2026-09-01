@@ -1,5 +1,5 @@
 # GEP_Bioenergy
-Original GEP-OnSSET analysis on competitive deployment of biomass gasification systems developed based on GEP version 3.
+Original GEP-OnSSET analysis on competitive deployment of biomass gasification systems developed based on ``` GEP version 3 ```.
 
 For more details on our methodology and analysis: -> [Bio-Electrification Potential: A Comparative Approach to Assessing Bioenergy Potential in SSA](http://dx.doi.org/10.2139/ssrn.7031778)
 
@@ -7,14 +7,14 @@ For more details on our methodology and analysis: -> [Bio-Electrification Potent
 To reproduce GEP Bio output
 - Clone git repository main branch and pip install the required dependencies.
 - Create a `/results` folder for GEP Bio output in your root repository.
-- Download required country gep scenario results and place in root repository. This can be obtained from [GEP](https://energydata.info/organization/world-bank-grou?q=GEP&sort=score+desc%2C+metadata_modified+desc).
+- Download required country gep scenario results and place in root repository. This can be obtained from [GEP data repository](https://energydata.info/organization/world-bank-grou?q=GEP&sort=score+desc%2C+metadata_modified+desc).
 - Specify path to the downloaded gep scenario folder in `GEP_Bio.ipynb` notebook.
 - Specify path to crop data file. In our case `/Nigeria_crop.xlsx` 
 - Run all cells in the `GEP_Bio.ipynb` notebook to generate GEP Bio output. Each scenario output file would be generated in `/results/scenarios` folder.
 
 
 ### Data
-GEP scenario runs and data for different countries can be obtained from [GEP](https://electrifynow.energydata.info/).
+GEP scenario runs and data for different countries can be obtained from [GEP data repository](https://energydata.info/organization/world-bank-grou?q=GEP&sort=score+desc%2C+metadata_modified+desc) or [Official GEP website](https://electrifynow.energydata.info/).
 
 For our case study: [GEP Nigeria](https://energydata.info/dataset/nigeria-global-electrification-platform-gep).
 
