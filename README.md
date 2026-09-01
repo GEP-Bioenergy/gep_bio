@@ -1,9 +1,10 @@
 # GEP_Bioenergy
 Original GEP-OnSSET analysis on competitive deployment of biomass gasification systems developed based on GEP version 3.
 
-Link to preprint -> [Bio-Electrification Potential: A Comparative Approach to Assessing Bioenergy Potential in SSA](http://dx.doi.org/10.2139/ssrn.7031778)
+For more details on our methodology and analysis: -> [Bio-Electrification Potential: A Comparative Approach to Assessing Bioenergy Potential in SSA](http://dx.doi.org/10.2139/ssrn.7031778)
 
 ### Setup
+To reproduce GEP Bio output
 - Clone git repository main branch and pip install the required dependencies.
 - Create a `/results` folder for GEP Bio output in your root repository.
 - Download required country gep scenario results and place in root repository. This can be obtained from [GEP](https://energydata.info/organization/world-bank-grou?q=GEP&sort=score+desc%2C+metadata_modified+desc).
@@ -15,7 +16,8 @@ Link to preprint -> [Bio-Electrification Potential: A Comparative Approach to As
 ### Data
 GEP scenario runs and data for different countries can be obtained from [GEP](https://electrifynow.energydata.info/).
 
-For our case study: [Nigeria](https://energydata.info/dataset/nigeria-global-electrification-platform-gep).
+For our case study: [GEP Nigeria](https://energydata.info/dataset/nigeria-global-electrification-platform-gep).
+
 
 
 ## Structure
@@ -52,3 +54,7 @@ Electrification Variables
 | `Admin1` | Location (State/Province) | — | Input |
 | `Ft_PerTonRes` | Estimated Feedstock price per ton of residues | $/ton | Output: ` main output from GEP Bio model` |
 
+
+```
+Reference: Gafar, A., Zerriffi, H., Ackom, E., Gergel, S. E., & Mentis, D. (2026). Bio-Electrification Potential: A Comparative Approach to Assessing Bioenergy Potential in Sub-Saharan Africa (SSA).
+```
