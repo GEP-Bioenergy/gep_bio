@@ -24,7 +24,7 @@ For our case study: [GEP Nigeria](https://energydata.info/dataset/nigeria-global
 ### Files
 - `GEP_Bio.ipynb`: main notebook file to run GEP scenarios.
 - `GEP_bio_analysis.ipynb`: notebook file for plotting and analyzing outputs from GEP Bio model.
-- `Nigeria_crop.xlsx`: Contains data on the top energy crop across different states.   
+- `Nigeria_crop.xlsx`: Contains data on the top energy crop across different states in Nigeria.   
 
 ### Folders
 - `/scripts`: contains the `gep_script.py` which has all functions used for GEP Bio analysis.
