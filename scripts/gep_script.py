@@ -122,11 +122,11 @@ def gasifier_parameters(sub_data, scenario):
 
 
 '''
-Analyzing crop demand using agricultural production data and Residue Product Ratio (RPR):
+Analyzing crop and residue demand using agricultural production data and Lower heating value (LHV):
     # Determine the weight of residues in tons
-    # Lower heating value in MJ/kg, conversion to tons (1000)
+    # LHV in MJ/kg
 '''
-def crop_land_calc(sub_data, crop, crop_data):
+def crop_res_calc(sub_data, crop, crop_data):
     
     # Add crop_data to sub_data
     sub_data['Crop'] = [ get_crop(state, crop) for state in sub_data['Admin1']]
@@ -136,17 +136,8 @@ def crop_land_calc(sub_data, crop, crop_data):
     sub_data['RPR'] = [ get_RPR_crop(crop, crop_data) for crop in sub_data['Crop']]
     sub_data['CropYield'] = [ get_yield_crop(crop, crop_data) for crop in sub_data['Crop']]
     
-    # Calculate residue weight based on top crop LHV
+    # Calculate residue weight based on top energy crop LHV
     sub_data['WeightOfRes']= (sub_data['TotalEnergyPerCell']* 3.6)/(0.3 * sub_data['LHV'] * 1000) #Ton 
-    
-    # Determine the weight of needed product (tons) @40% Availability
-    sub_data['WeightOfProd40']=sub_data['WeightOfRes']/(RESIDUE_AVAILABILITY_FACTOR* sub_data['RPR'])
-    
-    # Estimate cropping area using yield
-    sub_data['CropLandArea']=sub_data['WeightOfProd40']/(sub_data['CropYield']) #ha
-    
-    # Estimate cropping area based on cultivation percentage of TopCrop
-    sub_data['CultivationArea']=sub_data['CropLandArea']/(sub_data['PercentageArea']) #ha
     
     return sub_data
 
