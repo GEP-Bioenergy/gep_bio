@@ -56,5 +56,7 @@ Electrification Variables
 
 
 ```
+
 Reference: Gafar, A., Zerriffi, H., Ackom, E., Gergel, S. E., & Mentis, D. (2026). Bio-Electrification Potential: A Comparative Approach to Assessing Bioenergy Potential in Sub-Saharan Africa (SSA).
+
 ```
