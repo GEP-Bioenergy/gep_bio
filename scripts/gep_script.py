@@ -238,11 +238,11 @@ def fuel_CDF(sub_data, scenario, fuelCDF):
     if len(DeliveredFuelCost) > 0:
         cumulative = np.linspace(0,100, len(DeliveredFuelCost))
         tier = np.array(sorted_df['Tier'])
-        print("Length of delivered fuel cost", len(DeliveredFuelCost))
+        print("Total number of mini-grids", len(DeliveredFuelCost))
     else:
         cumulative = []
         tier = []
-        print("Length of delivered fuel cost",len(DeliveredFuelCost))
+        print("Total number of mini-grids",len(DeliveredFuelCost))
 
     # Sort the data in ascending order
     
