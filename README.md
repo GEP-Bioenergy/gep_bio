@@ -7,7 +7,7 @@ Link to preprint -> [Bio-Electrification Potential: A Comparative Approach to As
 - Clone git repository main branch and pip install the required dependencies.
 - Create a `/results` folder for GEP Bio output in your root repository.
 - Download required country gep scenario results and place in root repository. This can be obtained from [GEP](https://energydata.info/organization/world-bank-grou?q=GEP&sort=score+desc%2C+metadata_modified+desc).
-- Specify the path to the downloaded gep scenario results file in `GEP_Bio.ipynb` notebook.
+- Specify the path to the downloaded gep scenario results folder in `GEP_Bio.ipynb` notebook.
 - Run all cells in the `GEP_Bio.ipynb` notebook to generate GEP Bio output. Each scenario output file would be generated in `/results/scenarios` folder.
 
 
